@@ -58,6 +58,7 @@ print_info() {
 
     info "OS" distro
     info "Host" model
+    info "Model" machine_model
     info "Kernel" kernel
     info "Uptime" uptime
     info "Packages" packages
@@ -1376,6 +1377,16 @@ get_model() {
     case $model in
         "Standard PC"*) model="KVM/QEMU (${model})" ;;
         OpenBSD*)       model="vmm ($model)" ;;
+    esac
+}
+
+get_machine_model() {
+    case $os in
+        Windows)
+            # Get the Windows machine model from WMI.
+            machine_model=$(wmic computersystem get model)
+            machine_model=${machine_model/Model}
+        ;;
     esac
 }
 
